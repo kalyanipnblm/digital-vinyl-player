@@ -4,28 +4,38 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css">
+  <title>Vinyl Record Player with Spotify</title>
 </head>
 <body>
-<div class="site">
-  <div class="record-container">
-    <div class="record">
-      <div class="line-groove1"></div>
-      <div class="line-groove2"></div>
-      <div class="line-groove3"></div>
-      <div class="line-groove4"></div>
-      <div class="record-inner">
-        <div class="record-last"></div>
+  <div class="site">
+    <div class="record-container">
+      <div class="record">
+        <div class="line-groove1"></div>
+        <div class="line-groove2"></div>
+        <div class="line-groove3"></div>
+        <div class="line-groove4"></div>
+        <div class="record-inner">
+          <div class="record-last"></div>
+        </div>
+      </div>
+
+      <div class="tonearm">
+        <div class="tonearm-base"></div>
+        <div class="tonearm-arm"></div>
+        <div class="tonearm-head"></div>
       </div>
     </div>
 
-    <div class="tonearm">
-      <div class="tonearm-base"></div>
-      <div class="tonearm-arm"></div>
-      <div class="tonearm-head"></div>
+    <div class="spotify-player">
+      <h1>Spotify Music Player</h1>
+      <button id="login">Login to Spotify</button>
+      <input type="text" id="search" placeholder="Search for music..." />
+      <button id="search-btn">Search</button>
+      <ul id="results"></ul>
     </div>
   </div>
-</div>
 
-<script src="main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
+
