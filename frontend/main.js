@@ -1,4 +1,3 @@
-// Get elements from the DOM
 const loginBtn = document.getElementById('login');
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search');
@@ -8,7 +7,7 @@ let accessToken = null;
 
 // Redirect to Spotify login
 loginBtn.addEventListener('click', () => {
-  window.location.href = 'http://localhost:3000/login'; // Backend login URL
+  window.location.href = 'http://localhost:3000/login';
 });
 
 // Handle search
@@ -33,16 +32,56 @@ searchBtn.addEventListener('click', async () => {
   }
 });
 
-// Play track
-function playTrack(trackUri) {
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://open.spotify.com/embed/track/${trackUri.split(':')[2]}`;
-  iframe.width = 300;
-  iframe.height = 380;
-  iframe.frameBorder = 0;
-  iframe.allow = 'encrypted-media';
+// Play track and update background color
+async function playTrack(trackUri) {
+  const trackId = trackUri.split(':')[2];
 
-  resultsList.appendChild(iframe);
+  // Fetch track details to get the album art URL
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const trackData = await response.json();
+
+    // Get the album art URL
+    const albumArtUrl = trackData.album.images[0].url; // Use the highest resolution image
+
+    // Load the album art image
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Allow cross-origin access for the image
+    img.src = albumArtUrl;
+
+    img.onload = () => {
+      // Extract the dominant color using Color Thief
+      const colorThief = new ColorThief();
+      const dominantColor = colorThief.getColor(img);
+
+      // Convert RGB to HEX
+      const hexColor = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
+
+      // Update the background color of the body
+      document.body.style.backgroundColor = hexColor;
+    };
+
+    // Embed the Spotify player
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://open.spotify.com/embed/track/${trackId}`;
+    iframe.width = 300;
+    iframe.height = 380;
+    iframe.frameBorder = 0;
+    iframe.allow = 'encrypted-media';
+
+    // Clear previous results
+    resultsList.innerHTML = '';
+    resultsList.appendChild(iframe);
+  } catch (error) {
+    console.error("Error fetching track details:", error);
+  }
+}
+
+// Helper function to convert RGB to HEX
+function rgbToHex(r, g, b) {
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
 // Get access token from URL after login
