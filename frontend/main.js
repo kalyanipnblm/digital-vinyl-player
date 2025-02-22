@@ -2,6 +2,7 @@ const loginBtn = document.getElementById('login');
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search');
 const resultsList = document.getElementById('results');
+const loginContainer = document.getElementById('login-container'); // Get the login container
 
 let accessToken = null;
 
@@ -87,6 +88,11 @@ function rgbToHex(r, g, b) {
 // Get access token from URL after login
 const params = new URLSearchParams(window.location.hash.replace('#', '?'));
 accessToken = params.get('access_token');
+
+// Hide the login container after logging in
+if (accessToken) {
+  loginContainer.classList.add('hidden');
+}
 
 // Add vinyl rotation effect
 const record = document.querySelector('.record');

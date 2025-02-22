@@ -10,7 +10,24 @@
 </head>
 
 <body>
+
+  <div id="login-container">
+    <button id="login">Login to Spotify</button>
+  </div>
+
   <div class="site">
+
+    <div class="spotify-player">
+      <form class="search-container">
+        <input type="text" id="search" placeholder="Search for music..." />
+        <button type="submit" id="search-btn">
+          <img class="search-icon" src="https://www.freeiconspng.com/uploads/search-icon-png-21.png" alt="Search" />
+        </button>
+      </form>
+      <ul id="results"></ul>
+    </div>
+
+
     <div class="record-container">
       <div class="record">
         <div class="line-groove1"></div>
@@ -27,13 +44,6 @@
         <div class="tonearm-arm"></div>
         <div class="tonearm-head"></div>
       </div>
-    </div>
-
-    <div class="spotify-player">
-      <button id="login">Login to Spotify</button>
-      <input type="text" id="search" placeholder="Search for music..." />
-      <button id="search-btn">Search</button>
-      <ul id="results"></ul>
     </div>
   </div>
 
