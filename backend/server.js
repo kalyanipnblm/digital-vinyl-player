@@ -8,7 +8,7 @@ const PORT = 3000;
 
 // Enable CORS for frontend (http://localhost:5500)
 app.use(cors({
-  origin: 'http://127.0.0.1:5500',
+  origin: 'http://127.0.0.1:5501',
   credentials: true,
 }));
 
@@ -53,7 +53,8 @@ app.get('/callback', async (req, res) => {
     );
 
     const { access_token, refresh_token } = response.data;
-    res.redirect(`http://127.0.0.1:5500/frontend/#access_token=${access_token}`);
+    res.redirect(`http://127.0.0.1:5501/frontend/#access_token=${access_token}`);
+
 
   } catch (error) {
     console.error("Authentication error:", error);
@@ -85,4 +86,5 @@ app.get('/search', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
 

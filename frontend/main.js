@@ -24,10 +24,33 @@ searchBtn.addEventListener('click', async () => {
 
     data.tracks.items.forEach(track => {
       const li = document.createElement('li');
-      li.textContent = `${track.name} - ${track.artists[0].name}`;
+      li.classList.add('result-item');
       li.addEventListener('click', () => playTrack(track.uri));
+
+      // album art
+      const img = document.createElement('img');
+      img.src = track.album.images[2]?.url;        // small thumb
+      img.alt = track.name;
+      li.appendChild(img);
+
+      // info container
+      const info = document.createElement('div');
+      info.classList.add('track-info');
+
+      const title = document.createElement('div');
+      title.classList.add('track-title');
+      title.textContent = track.name;
+      info.appendChild(title);
+
+      const artist = document.createElement('div');
+      artist.classList.add('track-artist');
+      artist.textContent = track.artists.map(a => a.name).join(', ');
+      info.appendChild(artist);
+
+      li.appendChild(info);
       resultsList.appendChild(li);
     });
+
   } catch (error) {
     console.error("Error fetching search results:", error);
   }
@@ -105,4 +128,7 @@ function rotateVinyl() {
 }
 
 rotateVinyl();
+
+
+
 

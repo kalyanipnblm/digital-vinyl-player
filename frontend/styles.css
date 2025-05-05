@@ -1,101 +1,79 @@
+/* ────────────────────────────────────────────────────────────────────────── */
+/* RESET & BOX-SIZING */
 *,
-*::after,
-*::before {
+*::before,
+*::after {
     box-sizing: border-box;
-}
-
-body {
-    background-color: #F1F0E8;
-}
-
-
-#login-container {
-    height: 50px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-#login {
-    align-items: center;
-    background-color: initial;
-    background-image: linear-gradient(#464d55, #25292e);
-    border-radius: 8px;
-    border-width: 0;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, .1), 0 3px 6px rgba(0, 0, 0, .05);
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: inline-flex;
-    flex-direction: column;
-    font-family: expo-brand-demi, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    font-size: 14px;
-    height: 40px;
-    justify-content: center;
-    line-height: 1;
     margin: 0;
-    outline: none;
-    overflow: hidden;
-    padding: 0 20px;
-    text-align: center;
-    text-decoration: none;
-    transform: translate3d(0, 0, 0);
-    transition: all 150ms;
-    vertical-align: baseline;
-    white-space: nowrap;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
+    padding: 0;
 }
 
-#login:hover {
-    box-shadow: rgba(0, 1, 0, .2) 0 2px 8px;
-    opacity: .85;
+/* ────────────────────────────────────────────────────────────────────────── */
+/* BASE STYLES */
+body {
+    background-color: #121212;
+    color: #eee;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
 }
 
-#login:active {
-    outline: 0;
-}
-
-#login:focus {
-    box-shadow: rgba(0, 0, 0, .5) 0 0 0 3px;
-}
-
-@media (max-width: 420px) {
-    #login {
-        height: 48px;
-    }
-}
-
-
-#login-container.hidden {
+.hidden {
     visibility: hidden;
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* LOGIN BUTTON */
+#login-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#login {
+    background-image: linear-gradient(#333, #111);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 20px;
+    height: 40px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    transition: opacity 0.2s, box-shadow 0.2s;
+}
+
+#login:hover {
+    opacity: 0.85;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* LAYOUT */
 .site {
     max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px;
+    margin: 80px auto 40px;
+    padding: 0 20px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
     align-items: start;
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* SEARCH BAR */
 .search-container {
     width: 100%;
     max-width: 490px;
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 25px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    padding: 5px;
-    backdrop-filter: blur(10px);
+    padding: 5px 10px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
 }
 
 #search {
@@ -106,82 +84,92 @@ body {
     border: none;
     outline: none;
     border-radius: 25px;
-    background: rgba(255, 255, 255, 0.15);
-    color: white;
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.10);
+    color: #fff;
 }
 
 #search::placeholder {
-    color: rgba(64, 56, 56, 0.6);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 #search:focus {
-    border: 1px solid #008ABF;
-    transition: 0.35s ease;
-    color: #008ABF;
-}
-
-#search:focus::-webkit-input-placeholder {
-    transition: opacity 0.45s ease;
-    opacity: 0;
-}
-
-#search:focus::-moz-placeholder {
-    transition: opacity 0.45s ease;
-    opacity: 0;
-}
-
-#search:focus:-ms-placeholder {
-    transition: opacity 0.45s ease;
-    opacity: 0;
+    background: rgba(255, 255, 255, 0.15);
 }
 
 #search-btn {
     background: none;
     border: none;
-    cursor: pointer;
-    padding: 0;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .search-icon {
     width: 24px;
     height: 24px;
+    filter: invert(1);
 }
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* SEARCH RESULTS GRID & CARDS */
 #results {
     list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
     padding: 0;
-    margin: 20px 0 0 0;
 }
 
-#results li {
-    cursor: pointer;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease;
+.result-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    transition: transform 0.2s ease, background 0.2s ease;
 }
 
-#results li:hover {
-    background-color: rgba(255, 255, 255, 1);
+.result-item:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.10);
 }
 
-#results li img {
-    width: 50px;
-    height: 50px;
-    border-radius: 5px;
+.result-item img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 0.75rem;
 }
 
-#results li span {
-    font-size: 1rem;
-    color: #333;
+.track-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
+.track-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.track-artist {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 0.25rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* VINYL & TONEARM (your existing visuals) */
 .record-container {
     padding-top: 120%;
     width: 120%;
@@ -318,29 +306,4 @@ body {
     position: absolute;
     top: 7px;
     right: 0;
-}
-
-.spotify-player {
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#results {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#results li {
-    cursor: pointer;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-#results li:hover {
-    background-color: rgba(255, 255, 255, 0.2);
 }
