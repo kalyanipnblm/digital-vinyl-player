@@ -1,39 +1,36 @@
+
+
 const loginBtn = document.getElementById('login');
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search');
 const resultsList = document.getElementById('results');
-const loginContainer = document.getElementById('login-container'); // Get the login container
+const loginContainer = document.getElementById('login-container');
 
 let accessToken = null;
 
-// Redirect to Spotify login
 loginBtn.addEventListener('click', () => {
   window.location.href = 'http://localhost:3000/login';
 });
 
-// Handle search
 searchBtn.addEventListener('click', async () => {
   const query = searchInput.value;
   if (!query) return;
 
   try {
-    const response = await fetch(`http://localhost:3000/search?q=${query}&access_token=${accessToken}`); // Backend search URL
-    const data = await response.json();
+    const res = await fetch(`http://localhost:3000/search?q=${query}&access_token=${accessToken}`);
+    const data = await res.json();
 
-    resultsList.innerHTML = ''; // Clear previous results
-
+    resultsList.innerHTML = '';
     data.tracks.items.forEach(track => {
       const li = document.createElement('li');
       li.classList.add('result-item');
       li.addEventListener('click', () => playTrack(track.uri));
 
-      // album art
       const img = document.createElement('img');
-      img.src = track.album.images[2]?.url;        // small thumb
+      img.src = track.album.images[2]?.url;
       img.alt = track.name;
       li.appendChild(img);
 
-      // info container
       const info = document.createElement('div');
       info.classList.add('track-info');
 
@@ -50,44 +47,35 @@ searchBtn.addEventListener('click', async () => {
       li.appendChild(info);
       resultsList.appendChild(li);
     });
-
-  } catch (error) {
-    console.error("Error fetching search results:", error);
+  } catch (err) {
+    console.error("Error fetching search results:", err);
   }
 });
 
-// Play track and update background color
 async function playTrack(trackUri) {
   const trackId = trackUri.split(':')[2];
-
-  // Fetch track details to get the album art URL
   try {
-    const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+    // Slide vinyl into view first
+    document.querySelector('.vinyl-container').classList.add('visible');
+
+    const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
     });
-    const trackData = await response.json();
+    const trackData = await res.json();
+    const albumArt = trackData.album.images[0].url;
 
-    // Get the album art URL
-    const albumArtUrl = trackData.album.images[0].url; // Use the highest resolution image
+    // Rest of your existing playTrack code
+    document.getElementById('label').style.backgroundImage = `url(${albumArt})`;
 
-    // Load the album art image
     const img = new Image();
-    img.crossOrigin = 'Anonymous'; // Allow cross-origin access for the image
-    img.src = albumArtUrl;
-
+    img.crossOrigin = 'Anonymous';
+    img.src = albumArt;
     img.onload = () => {
-      // Extract the dominant color using Color Thief
       const colorThief = new ColorThief();
-      const dominantColor = colorThief.getColor(img);
-
-      // Convert RGB to HEX
-      const hexColor = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
-
-      // Update the background color of the body
-      document.body.style.backgroundColor = hexColor;
+      const [r, g, b] = colorThief.getColor(img);
+      document.body.style.backgroundColor = rgbToHex(r, g, b);
     };
 
-    // Embed the Spotify player
     const iframe = document.createElement('iframe');
     iframe.src = `https://open.spotify.com/embed/track/${trackId}`;
     iframe.width = 300;
@@ -95,39 +83,67 @@ async function playTrack(trackUri) {
     iframe.frameBorder = 0;
     iframe.allow = 'encrypted-media';
 
-    // Clear previous results
     resultsList.innerHTML = '';
     resultsList.appendChild(iframe);
-  } catch (error) {
-    console.error("Error fetching track details:", error);
+  } catch (err) {
+    console.error("Error fetching track details:", err);
   }
 }
 
-// Helper function to convert RGB to HEX
 function rgbToHex(r, g, b) {
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
-// Get access token from URL after login
+// grab token from URL
 const params = new URLSearchParams(window.location.hash.replace('#', '?'));
 accessToken = params.get('access_token');
+if (accessToken) loginContainer.classList.add('hidden');
 
-// Hide the login container after logging in
-if (accessToken) {
-  loginContainer.classList.add('hidden');
-}
+//Realistic-vinyl initialization 
 
-// Add vinyl rotation effect
-const record = document.querySelector('.record');
-let rotation = 0;
+document.addEventListener('DOMContentLoaded', () => {
+  const groovesEl = document.getElementById('grooves');
+  const labelEl = document.getElementById('label');
+  const recordEl = document.getElementById('record');
 
-function rotateVinyl() {
-  rotation += 1;
-  record.style.transform = `rotate(${rotation}deg)`;
-  requestAnimationFrame(rotateVinyl);
-}
+  // fill these URLs with whatever label-art you like
+  const covers = [
+    'https://path/to/cover1.jpg',
+    'https://path/to/cover2.jpg',
+    'https://path/to/cover3.jpg',
+  ];
 
-rotateVinyl();
+  // relative inner-groove positions for track breaks
+  const tracks = [0.1, 0.33, 0.42, 0.56, 0.78, 0.94];
+
+  const start = labelEl.offsetWidth * 1.15;
+  const end = recordEl.offsetWidth * 0.96;
+  const inc = 6;
+  const varian = 3;
+
+  function random(n) { return Math.round(Math.random() * n); }
+
+  // fine random grooves
+  for (let size = start; size < end; size += inc + random(varian)) {
+    const d = document.createElement('div');
+    d.className = 'groove round centered';
+    d.style.width = d.style.height = `${size}px`;
+    groovesEl.appendChild(d);
+  }
+
+  // wider “track” grooves
+  tracks.forEach(p => {
+    const d = document.createElement('div');
+    const size = start + (end - start) * p;
+    d.className = 'groove round centered trackGroove';
+    d.style.width = d.style.height = `${size}px`;
+    groovesEl.appendChild(d);
+  });
+
+  // pick a random label art to start with
+  const randomCover = covers[Math.floor(Math.random() * covers.length)];
+  labelEl.style.backgroundImage = `url(${randomCover})`;
+});
 
 
 

@@ -9,7 +9,7 @@
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* BASE STYLES */
+/* BASE & LAYOUT */
 body {
     background-color: #121212;
     color: #eee;
@@ -22,8 +22,6 @@ body {
     visibility: hidden;
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/* LOGIN BUTTON */
 #login-container {
     position: absolute;
     top: 10px;
@@ -50,16 +48,17 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8);
 }
 
-/* ────────────────────────────────────────────────────────────────────────── */
-/* LAYOUT */
 .site {
-    max-width: 1000px;
-    margin: 80px auto 40px;
-    padding: 0 20px;
+    /* top, right, bottom, left */
+    margin: 80px 0 40px 20px;
+    /* removes the auto centering on the right,
+       and gives you a 20px gap on the left */
+    padding: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
     align-items: start;
+    justify-items: start;
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -169,116 +168,174 @@ body {
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
-/* VINYL & TONEARM (your existing visuals) */
-.record-container {
-    padding-top: 120%;
-    width: 120%;
+/* REALISTIC VINYL (NEW) */
+
+/* ─── Vinyl Container ───────────────────────────────────────── */
+.vinyl-container {
+    --vinyl-size: 900px;
+    position: absolute;
+    top: 120px;
+    right: calc(-1 * (var(--vinyl-size) - 100px));
+    width: var(--vinyl-size);
+    height: var(--vinyl-size);
+    pointer-events: none;
+    z-index: 100;
+    transition: right 0.6s ease-in-out;
+}
+
+.vinyl-container.visible {
+    right: 40px;
+}
+
+
+
+.centered {
     position: relative;
-    margin: 0;
-    transform: skew(0, 0);
-    animation: SKIP 3000ms infinite ease-in-out;
-    left: 0;
-    top: 0;
-}
-
-.record,
-.record-inner,
-.record-last {
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background: #2b2b2b;
-}
-
-.record {
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    right: 0;
-    box-shadow: 0 -4px 8px #000000, 0 0 20px rgba(0, 0, 0, 0.5);
-    background: radial-gradient(circle at 50% 50%, #2b2b2b, #1a1a1a 70%);
-}
-
-[class*="line-groove"] {
-    border: 1px solid #252525;
-    border-radius: 50%;
-    bottom: 0;
-    position: absolute;
-    left: 5%;
-    top: 5%;
-    width: 90%;
-    height: 90%;
-}
-
-.line-groove2 {
-    left: 15%;
-    top: 15%;
-    width: 70%;
-    height: 70%;
-}
-
-.line-groove3 {
-    left: 20%;
-    top: 20%;
-    width: 60%;
-    height: 60%;
-}
-
-.line-groove4 {
-    left: 25%;
-    top: 25%;
-    width: 50%;
-    height: 50%;
-    display: none;
-}
-
-.record-inner,
-.record-last {
-    background: #950101;
-    width: 30%;
-    height: 30%;
     top: 50%;
     left: 50%;
-    margin: -15% 0 0 -15%;
-    border: 14px solid #000000;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%);
 }
 
-.record-last {
-    background: #fff;
-    border: none;
-    height: 6%;
-    width: 6%;
-    margin: -3% 0 0 -3%;
+.round {
+    border-radius: 50%;
 }
 
-@keyframes SKIP {
-    0% {
-        transform: skew(0deg, 0deg);
+.vinyl-container .outer {
+    position: relative;
+}
+
+/* only vinyl layers inside the container get sized */
+.vinyl-container .layer,
+.vinyl-container #record {
+    position: absolute;
+    width: var(--vinyl-size);
+    height: var(--vinyl-size);
+}
+
+/* likewise scope your grooves wrapper */
+.vinyl-container #grooves {
+    position: absolute;
+    width: var(--vinyl-size);
+    height: var(--vinyl-size);
+}
+
+.vinyl-container #record {
+    background-color: #070707;
+    box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.5);
+}
+
+.vinyl-container #sheen {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 0;
+    box-shadow: 0 0 250px 100px rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg) translateX(-50%);
+    transform-origin: 0;
+    overflow: hidden;
+}
+
+.vinyl-container #label {
+    position: absolute;
+    display: block;
+    width: 33%;
+    height: 33%;
+    background-color: #CCC;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.2);
+}
+
+.vinyl-container #hole {
+    position: absolute;
+    display: block;
+    width: 10%;
+    height: 10%;
+    background-color: #121314;
+    box-shadow: inset 0 0 8px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* grooves */
+.vinyl-container .groove {
+    position: absolute !important;
+    display: block;
+    background: transparent;
+    border: 1px solid rgba(40, 40, 40, 0.3);
+}
+
+.vinyl-container .trackGroove {
+    border: 2px solid rgba(7, 7, 7, 0.2);
+}
+
+/* animations */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
     }
 
-    50% {
-        transform: skew(1deg, 2deg);
-    }
-
-    100% {
-        transform: skew(0deg, 0deg);
+    to {
+        transform: rotate(360deg);
     }
 }
 
-.tonearm {
+@keyframes backnforth {
+    33% {
+        transform: rotate(-1deg);
+    }
+
+    66% {
+        transform: rotate(1deg);
+    }
+}
+
+@keyframes wobble {
+    33% {
+        transform: rotate(0.1deg);
+    }
+
+    66% {
+        transform: rotate(-0.1deg);
+    }
+}
+
+.vinyl-container .turning .rotating {
+    animation: rotate 7s linear infinite;
+}
+
+.vinyl-container .turning .backnforth {
+    animation: backnforth 1s linear infinite;
+}
+
+.vinyl-container .turning .wobble {
+    animation: wobble 20s infinite;
+}
+
+/* optional RPM speed classes */
+.vinyl-container .rpm33 .rotating {
+    animation-duration: 1.82s;
+}
+
+.vinyl-container .rpm45 .rotating {
+    animation-duration: 1.33s;
+}
+
+.vinyl-container .rpm78 .rotating {
+    animation-duration: 0.77s;
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* Tonearm */
+.vinyl-container .tonearm {
     position: absolute;
     top: 50%;
-    right: -25%;
-    transform: translateY(-50%) rotate(-30deg);
-    width: 60%;
+    right: calc(50% - var(--vinyl-size)/2 - 100px);
+    transform: translateY(-50%) rotate(-45deg);
+    width: 80%;
     height: 24px;
 }
 
-.tonearm-base {
+.vinyl-container .tonearm-base {
     width: 24px;
     height: 24px;
     background: #555;
@@ -288,7 +345,7 @@ body {
     left: 0;
 }
 
-.tonearm-arm {
+.vinyl-container .tonearm-arm {
     width: 100%;
     height: 6px;
     background: #555;
@@ -298,7 +355,7 @@ body {
     transform-origin: left center;
 }
 
-.tonearm-head {
+.vinyl-container .tonearm-head {
     width: 12px;
     height: 12px;
     background: #950101;
